@@ -1,0 +1,122 @@
+openapi: 3.0.0
+info:
+  title: Luxor
+  description: API specification for Luxor FXLuminaire lighting system.
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+
+servers:
+- url: http://{host}
+  variables:
+    host:
+      default: ""
+
+components:
+  schemas:
+    Status:
+      type: integer
+      # oneOf:
+      # - enum: [0]
+      #   title: Ok
+      # - enum: [1]
+      #   title: UnknownMethod
+      # - enum: [101]
+      #   title: UnparseableRequest
+      # - enum: [102]
+      #   title: InvalidRequest
+    Group:
+      type: object
+      properties:
+        Grp:
+          description: Group number
+          type: integer
+        Name:
+          type: string
+        Inten:
+          description: Intensity
+          type: integer
+        Colr:
+          description: Color
+          type: integer
+  parameters:
+  responses:
+    Ok:
+    UnknownMethod:
+    UnparseableRequest:
+    InvalidRequest:
+
+paths:
+  /ControllerName.json:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+                  Controller:
+                    type: string
+                  ConnType:
+                    type: string
+                  RSSI:
+                    type: integer
+
+  /GroupListGet.json:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+                  GroupList:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+
+  /ExtinguishAll.json:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /IlluminateAll.json:
+    post:
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+    # Ok,
+    # UnknownMethod,
+    # UnparseableRequest,
+    # InvalidRequest,
+    # ColorValueOutOfRange,
+    # PreconditionFailed,
+    # GroupNameInUse,
+    # GroupNumberInUse,
+    # ItemDoesNotExist,
+    # BadGroupNumber,
+    # ThemeIndexOutOfRange,
+    # BadThemeIndex,
+    # ThemeChangesRestricted,
+    # Unknown,

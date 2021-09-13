@@ -40,18 +40,13 @@ components:
         Colr:
           description: Color
           type: integer
-  parameters:
-  responses:
-    Ok:
-    UnknownMethod:
-    UnparseableRequest:
-    InvalidRequest:
 
 paths:
   /ControllerName.json:
     post:
       responses:
         '200':
+          description: "Controller details"
           content:
             application/json:
               schema:
@@ -70,6 +65,7 @@ paths:
     post:
       responses:
         '200':
+          description: "List of groups"
           content:
             application/json:
               schema:
@@ -86,6 +82,7 @@ paths:
     post:
       responses:
         '200':
+          description: "Turn off all lights"
           content:
             application/json:
               schema:
@@ -98,6 +95,7 @@ paths:
     post:
       responses:
         '200':
+          description: "Turn on all lights"
           content:
             application/json:
               schema:

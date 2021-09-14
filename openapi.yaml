@@ -11,7 +11,7 @@ servers:
 - url: http://{host}
   variables:
     host:
-      default: ""
+      default: "localhost"
 
 components:
   schemas:
@@ -75,6 +75,9 @@ components:
 paths:
   /AssignLight.json:
     post:
+      operationId: AssignLight
+      tags:
+        - Lights
       summary: "Assign a light to a group"
       requestBody:
         required: true
@@ -88,6 +91,9 @@ paths:
                 GroupNumber:
                   type: integer
                   format: uint8
+              required:
+                - SerialNumber
+                - GroupNumber
       responses:
         '200':
           description: ""
@@ -101,6 +107,9 @@ paths:
 
   /ControllerName.json:
     post:
+      operationId: ControllerName
+      tags:
+        - Controller
       summary: "Retrieve controller details"
       responses:
         '200':
@@ -121,6 +130,9 @@ paths:
 
   /ExtinguishAll.json:
     post:
+      operationId: ExtinguishAll
+      tags:
+        - Lights
       summary: "Turn off all lights"
       responses:
         '200':
@@ -135,7 +147,10 @@ paths:
 
   /FlashLights.json:
     post:
+      operationId: FlashLights
       summary: "Flash all lights"
+      tags:
+        - Lights
       requestBody:
         required: true
         content:
@@ -146,6 +161,8 @@ paths:
                 OnOff:
                   type: integer
                   format: uint8
+              required:
+                - OnOff
       responses:
         '200':
           description: "Command status"
@@ -159,6 +176,9 @@ paths:
 
   /GroupListAdd.json:
     post:
+      operationId: GroupListAdd
+      tags:
+        - Groups
       summary: "Add a group"
       requestBody:
         required: true
@@ -172,6 +192,9 @@ paths:
                   format: uint8
                 Name:
                   type: string
+              required:
+              - GroupNumber
+              - Name
       responses:
         '200':
           description: "Command status"
@@ -185,6 +208,9 @@ paths:
 
   /GroupListClear.json:
     post:
+      operationId: GroupListClear
+      tags:
+        - Groups
       summary: "TBD"
       responses:
         '200':
@@ -203,6 +229,9 @@ paths:
 
   /GroupListDelete.json:
     post:
+      operationId: GroupListDelete
+      tags:
+        - Groups
       summary: "Delete a group"
       requestBody:
         required: true
@@ -213,6 +242,8 @@ paths:
               properties:
                 Name:
                   type: string
+              required:
+              - Name
       responses:
         '200':
           description: "Command result"
@@ -226,6 +257,9 @@ paths:
 
   /GroupListGet.json:
     post:
+      operationId: GroupListGet
+      tags:
+        - Groups
       summary: "Retrieve all groups"        
       responses:
         '200':
@@ -244,6 +278,9 @@ paths:
 
   /GroupListRename.json:
     post:
+      operationId: GroupListRename
+      tags:
+        - Groups
       summary: "Rename a group"
       requestBody:
         required: true
@@ -256,6 +293,9 @@ paths:
                   type: string
                 NewName:
                   type: string
+              required:
+              - OldName
+              - NewName
       responses:
         '200':
           description: "Command result"
@@ -269,6 +309,9 @@ paths:
   
   /GroupListReorder.json:
     post:
+      operationId: GroupListReorder
+      tags:
+        - Groups
       summary: "Reorder all groups"
       requestBody:
         required: true
@@ -282,6 +325,8 @@ paths:
                   items:
                     type: integer
                     format: uint8
+              required:
+              - GroupNumbers
       responses:
         '200':
           description: "Command result"
@@ -295,6 +340,9 @@ paths:
 
   /IlluminateAll.json:
     post:
+      operationId: IlluminateAll
+      tags:
+        - Lights
       summary: "Turn on all lights"
       responses:
         '200':
@@ -309,6 +357,9 @@ paths:
 
   /IlluminateGroup.json:
     post:
+      operationId: IlluminateGroup
+      tags:
+        - Groups
       summary: "Turn on a group of lights"
       requestBody:
         required: true
@@ -323,6 +374,9 @@ paths:
                 Intensity:
                   type: integer
                   format: uint8
+              required:
+              - GroupNumber
+              - Intensity
       responses:
         '200':
           description: "Command result"
@@ -336,6 +390,9 @@ paths:
 
   /IlluminateTheme.json:
     post:
+      operationId: IlluminateTheme
+      tags:
+        - Themes
       summary: "Activate a theme"
       requestBody:
         required: true
@@ -351,6 +408,9 @@ paths:
                   description: "0 to turn off, or non-zero to set intensity"
                   type: integer
                   format: uint8
+              required:
+              - ThemeIndex
+              - OnOff
       responses:
         '200':
           description: "Command result"
@@ -364,6 +424,9 @@ paths:
 
   /ThemeClear.json:
     post:
+      operationId: ThemeClear
+      tags:
+        - Themes
       summary: "TBD"
       requestBody:
         required: true
@@ -375,6 +438,8 @@ paths:
                 ThemeIndex:
                   type: integer
                   format: uint8
+              required:
+              - ThemeIndex
       responses:
         '200':
           description: "Command result"
@@ -388,6 +453,9 @@ paths:
 
   /ThemeGet.json:
     post:
+      operationId: ThemeGet
+      tags:
+        - Themes
       summary: "Retrieve a theme"
       requestBody:
         required: true
@@ -399,6 +467,8 @@ paths:
                 ThemeIndex:
                   type: integer
                   format: uint8
+              required:
+              - ThemeIndex
       responses:
         '200':
           description: "List of groups"
@@ -416,6 +486,9 @@ paths:
 
   /ThemeListAdd.json:
     post:
+      operationId: ThemeListAdd
+      tags:
+        - Themes
       summary: "Add a theme"
       requestBody:
         required: true
@@ -429,6 +502,9 @@ paths:
                   format: uint8
                 Name:
                   type: string
+              required:
+              - ThemeIndex
+              - Name
       responses:
         '200':
           description: "Command status"
@@ -442,6 +518,9 @@ paths:
 
   /ThemeListClear.json:
     post:
+      operationId: ThemeListClear
+      tags:
+        - Themes
       summary: "TBD"
       responses:
         '200':
@@ -456,6 +535,9 @@ paths:
 
   /ThemeListDelete.json:
     post:
+      operationId: ThemeListDelete
+      tags:
+        - Themes
       summary: "Delete a theme"
       requestBody:
         required: true
@@ -466,6 +548,8 @@ paths:
               properties:
                 Name:
                   type: string
+              required:
+              - Name
       responses:
         '200':
           description: "Command status"
@@ -479,6 +563,9 @@ paths:
 
   /ThemeListGet.json:
     post:
+      operationId: ThemeListGet
+      tags:
+        - Themes
       summary: "Retrieve list of themes"
       responses:
         '200':
@@ -500,6 +587,9 @@ paths:
 
   /ThemeListRename.json:
     post:
+      operationId: ThemeListRename
+      tags:
+        - Themes
       summary: "Rename a theme"
       requestBody:
         required: true
@@ -512,6 +602,9 @@ paths:
                   type: string
                 NewName:
                   type: string
+              required:
+              - OldName
+              - NewName
       responses:
         '200':
           description: "Command status"
@@ -525,6 +618,9 @@ paths:
   
   /ThemeListReorder.json:
     post:
+      operationId: ThemeListReorder
+      tags:
+        - Themes
       summary: "Rename a theme"
       requestBody:
         required: true
@@ -538,6 +634,8 @@ paths:
                   items:
                     type: integer
                     format: uint8
+              required:
+              - ThemeIndexes
       responses:
         '200':
           description: "Command status"
@@ -551,6 +649,9 @@ paths:
 
   /ThemeSet.json:
     post:
+      operationId: ThemeSet
+      tags:
+        - Themes
       summary: "Activate a theme"
       requestBody:
         required: true
@@ -568,6 +669,9 @@ paths:
                   type: array
                   items:
                     $ref: '#/components/schemas/ThemeGroup'
+              required:
+              - ThemeIndex
+              - Groups
       responses:
         '200':
           description: "Command status"

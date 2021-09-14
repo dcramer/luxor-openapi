@@ -15,18 +15,51 @@ servers:
 
 components:
   schemas:
-    Status:
-      type: integer
-      format: uint8
-      # oneOf:
-      # - enum: [0]
-      #   title: Ok
-      # - enum: [1]
-      #   title: UnknownMethod
-      # - enum: [101]
-      #   title: UnparseableRequest
-      # - enum: [102]
-      #   title: InvalidRequest
+    AssignLightRequest:
+      type: object
+      properties:
+        SerialNumber:
+          type: integer
+        GroupNumber:
+          type: integer
+          format: uint8
+      required:
+        - SerialNumber
+        - GroupNumber
+    AssignLightResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    ControllerNameResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+        Controller:
+          type: string
+        ConnType:
+          type: string
+        RSSI:
+          type: integer
+    ExtinguishAllResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    FlashLightsRequest:
+      type: object
+      properties:
+        OnOff:
+          type: integer
+          format: uint8
+      required:
+        - OnOff
+    FlashLightsResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
     Group:
       type: object
       properties:
@@ -44,6 +77,125 @@ components:
           description: Color
           type: integer
           format: uint8
+    GroupListAddRequest:
+      type: object
+      properties:
+        GroupNumber:
+          type: integer
+          format: uint8
+        Name:
+          type: string
+      required:
+      - GroupNumber
+      - Name
+    GroupListAddResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    GroupListClearResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+        GroupList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    GroupListDeleteRequest:
+      type: object
+      properties:
+        Name:
+          type: string
+      required:
+      - Name
+    GroupListDeleteResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    GroupListGetResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+        GroupList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Group'
+    GroupListRenameRequest:
+      type: object
+      properties:
+        OldName:
+          type: string
+        NewName:
+          type: string
+      required:
+      - OldName
+      - NewName
+    GroupListRenameResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    GroupListReorderRequest:
+      type: object
+      properties:
+        GroupNumbers:
+          type: array
+          items:
+            type: integer
+            format: uint8
+      required:
+      - GroupNumbers
+    GroupListReorderResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    IlluminateAllResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    IlluminateGroupRequest:
+      type: object
+      properties:
+        GroupNumber:
+          type: integer
+          format: uint8
+        Intensity:
+          type: integer
+          format: uint8
+      required:
+      - GroupNumber
+      - Intensity
+    IlluminateGroupResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    IlluminateThemeRequest:
+      type: object
+      properties:
+        ThemeIndex:
+          type: integer
+          format: uint8
+        OnOff:
+          description: "0 to turn off, or non-zero to set intensity"
+          type: integer
+          format: uint8
+      required:
+      - ThemeIndex
+      - OnOff
+    IlluminateThemeResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    Status:
+      type: integer
+      format: uint8
     Theme:
       type: object
       properties:
@@ -71,6 +223,131 @@ components:
           description: Color
           type: integer
           format: uint8
+    ThemeClearRequest:
+      type: object
+      properties:
+        ThemeIndex:
+          type: integer
+          format: uint8
+      required:
+      - ThemeIndex
+    ThemeClearResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    ThemeGetRequest:
+      type: object
+      properties:
+        ThemeIndex:
+          type: integer
+          format: uint8
+      required:
+      - ThemeIndex
+    ThemeGetResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+        Groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThemeGroup'
+    ThemeListAddRequest:
+      type: object
+      properties:
+        ThemeIndex:
+          type: integer
+          format: uint8
+        Name:
+          type: string
+      required:
+      - ThemeIndex
+      - Name
+    ThemeListAddResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    ThemeListClearResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    ThemeListDeleteRequest:
+      type: object
+      properties:
+        Name:
+          type: string
+      required:
+      - Name
+    ThemeListDeleteResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    ThemeListGetResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+        Restricted:
+          description: "Restricted will be non-zero if themes are restricted in controller's setup menu. This implies some operations may not be performed through the API."
+          type: integer
+        ThemeList:
+          type: array
+          items:
+            $ref: '#/components/schemas/Theme'
+    ThemeListRenameRequest:
+      type: object
+      properties:
+        OldName:
+          type: string
+        NewName:
+          type: string
+      required:
+      - OldName
+      - NewName
+    ThemeListRenameResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    ThemeListReorderRequest:
+      type: object
+      properties:
+        ThemeIndexes:
+          type: array
+          items:
+            type: integer
+            format: uint8
+      required:
+      - ThemeIndexes
+    ThemeListReorderResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
+    ThemeSetRequest:
+      type: object
+      properties:
+        ThemeIndex:
+          type: array
+          items:
+            type: integer
+            format: uint8
+        Groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/ThemeGroup'
+      required:
+      - ThemeIndex
+      - Groups
+    ThemeSetResponse:
+      type: object
+      properties:
+        Status:
+          $ref: '#/components/schemas/Status'
 
 paths:
   /AssignLight.json:
@@ -84,26 +361,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                SerialNumber:
-                  type: integer
-                GroupNumber:
-                  type: integer
-                  format: uint8
-              required:
-                - SerialNumber
-                - GroupNumber
+              $ref: '#/components/schemas/AssignLightRequest'
       responses:
         '200':
           description: ""
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+               $ref: '#/components/schemas/AssignLightResponse'
 
   /ControllerName.json:
     post:
@@ -117,17 +382,8 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
-                  Controller:
-                    type: string
-                  ConnType:
-                    type: string
-                  RSSI:
-                    type: integer
-
+                $ref: '#/components/schemas/ControllerNameResponse'
+                
   /ExtinguishAll.json:
     post:
       operationId: ExtinguishAll
@@ -140,10 +396,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/ExtinguishAllResponse'
 
   /FlashLights.json:
     post:
@@ -156,23 +409,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                OnOff:
-                  type: integer
-                  format: uint8
-              required:
-                - OnOff
+              $ref: '#/components/schemas/FlashLightsRequest'
       responses:
         '200':
           description: "Command status"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/FlashLightsResponse'
 
   /GroupListAdd.json:
     post:
@@ -185,26 +429,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                GroupNumber:
-                  type: integer
-                  format: uint8
-                Name:
-                  type: string
-              required:
-              - GroupNumber
-              - Name
+              $ref: '#/components/schemas/GroupListAddRequest'
       responses:
         '200':
           description: "Command status"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/FlashLightsResponse'
 
   /GroupListClear.json:
     post:
@@ -218,14 +450,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
-                  GroupList:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Group'
+                $ref: '#/components/schemas/GroupListClearResponse'
 
   /GroupListDelete.json:
     post:
@@ -238,22 +463,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                Name:
-                  type: string
-              required:
-              - Name
+              $ref: '#/components/schemas/GroupListDeleteRequest'
       responses:
         '200':
           description: "Command result"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/GroupListDeleteResponse'
 
   /GroupListGet.json:
     post:
@@ -267,14 +484,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
-                  GroupList:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Group'
+                $ref: '#/components/schemas/GroupListGetResponse'
 
   /GroupListRename.json:
     post:
@@ -287,25 +497,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                OldName:
-                  type: string
-                NewName:
-                  type: string
-              required:
-              - OldName
-              - NewName
+              $ref: '#/components/schemas/GroupListRenameRequest'
       responses:
         '200':
           description: "Command result"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/GroupListRenameResponse'
   
   /GroupListReorder.json:
     post:
@@ -318,25 +517,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                GroupNumbers:
-                  type: array
-                  items:
-                    type: integer
-                    format: uint8
-              required:
-              - GroupNumbers
+              $ref: '#/components/schemas/GroupListReorderRequest'
       responses:
         '200':
           description: "Command result"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/GroupListReorderResponse'
 
   /IlluminateAll.json:
     post:
@@ -350,10 +538,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/IlluminateAllResponse'
 
   /IlluminateGroup.json:
     post:
@@ -366,27 +551,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                GroupNumber:
-                  type: integer
-                  format: uint8
-                Intensity:
-                  type: integer
-                  format: uint8
-              required:
-              - GroupNumber
-              - Intensity
+              $ref: '#/components/schemas/IlluminateGroupRequest'
       responses:
         '200':
           description: "Command result"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/IlluminateGroupResponse'
 
   /IlluminateTheme.json:
     post:
@@ -399,28 +571,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                ThemeIndex:
-                  type: integer
-                  format: uint8
-                OnOff:
-                  description: "0 to turn off, or non-zero to set intensity"
-                  type: integer
-                  format: uint8
-              required:
-              - ThemeIndex
-              - OnOff
+              $ref: '#/components/schemas/IlluminateThemeRequest'
       responses:
         '200':
           description: "Command result"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/IlluminateThemeResponse'
 
   /ThemeClear.json:
     post:
@@ -433,23 +591,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                ThemeIndex:
-                  type: integer
-                  format: uint8
-              required:
-              - ThemeIndex
+              $ref: '#/components/schemas/ThemeClearRequest'
       responses:
         '200':
           description: "Command result"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/ThemeClearResponse'
 
   /ThemeGet.json:
     post:
@@ -462,27 +611,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                ThemeIndex:
-                  type: integer
-                  format: uint8
-              required:
-              - ThemeIndex
+              $ref: '#/components/schemas/ThemeGetRequest'
       responses:
         '200':
           description: "List of groups"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
-                  Groups:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ThemeGroup'
+                $ref: '#/components/schemas/ThemeGetResponse'
 
   /ThemeListAdd.json:
     post:
@@ -495,26 +631,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                ThemeIndex:
-                  type: integer
-                  format: uint8
-                Name:
-                  type: string
-              required:
-              - ThemeIndex
-              - Name
+              $ref: '#/components/schemas/ThemeListAddRequest'
       responses:
         '200':
           description: "Command status"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/ThemeListAddResponse'
 
   /ThemeListClear.json:
     post:
@@ -528,10 +652,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/ThemeListClearResponse'
 
   /ThemeListDelete.json:
     post:
@@ -544,22 +665,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                Name:
-                  type: string
-              required:
-              - Name
+              $ref: '#/components/schemas/ThemeListDeleteRequest'
       responses:
         '200':
           description: "Command status"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/ThemeListDeleteResponse'
 
   /ThemeListGet.json:
     post:
@@ -573,17 +686,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
-                  Restricted:
-                    description: "Restricted will be non-zero if themes are restricted in controller's setup menu. This implies some operations may not be performed through the API."
-                    type: integer
-                  ThemeList:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Theme'
+                $ref: '#/components/schemas/ThemeListGetResponse'
 
   /ThemeListRename.json:
     post:
@@ -596,25 +699,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                OldName:
-                  type: string
-                NewName:
-                  type: string
-              required:
-              - OldName
-              - NewName
+              $ref: '#/components/schemas/ThemeListRenameRequest'
       responses:
         '200':
           description: "Command status"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/ThemeListRenameResponse'
   
   /ThemeListReorder.json:
     post:
@@ -627,25 +719,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                ThemeIndexes:
-                  type: array
-                  items:
-                    type: integer
-                    format: uint8
-              required:
-              - ThemeIndexes
+              $ref: '#/components/schemas/ThemeListReorderRequest'
       responses:
         '200':
           description: "Command status"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/ThemeListReorderResponse'
 
   /ThemeSet.json:
     post:
@@ -658,30 +739,14 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                ThemeIndex:
-                  type: array
-                  items:
-                    type: integer
-                    format: uint8
-                Groups:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/ThemeGroup'
-              required:
-              - ThemeIndex
-              - Groups
+              $ref: '#/components/schemas/ThemeSetRequest'
       responses:
         '200':
           description: "Command status"
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Status:
-                    $ref: '#/components/schemas/Status'
+                $ref: '#/components/schemas/ThemeSetResponse'
 
     # Ok,
     # UnknownMethod,

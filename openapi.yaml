@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: Luxor
-  description: API specification for Luxor FXLuminaire lighting system.
+  title: FXLuminaire Luxor
+  description: API specification for FXLuminaire's Luxor lighting system.
   license:
     name: Apache 2.0
     url: https://www.apache.org/licenses/LICENSE-2.0.html
@@ -17,6 +17,7 @@ components:
   schemas:
     Status:
       type: integer
+      format: uint8
       # oneOf:
       # - enum: [0]
       #   title: Ok
@@ -32,18 +33,75 @@ components:
         Grp:
           description: Group number
           type: integer
+          format: uint8
         Name:
           type: string
         Inten:
           description: Intensity
           type: integer
+          format: uint8
         Colr:
           description: Color
           type: integer
+          format: uint8
+    Theme:
+      type: object
+      properties:
+        ThemeIndex:
+          description: Theme number
+          type: integer
+          format: uint8
+        Name:
+          type: string
+        OnOff:
+          description: Color
+          type: integer
+          format: uint8
+    ThemeGroup:
+      type: object
+      properties:
+        GroupNumber:
+          description: Group number
+          type: integer
+        Intensity:
+          description: Intensity
+          type: integer
+          format: uint8
+        Color:
+          description: Color
+          type: integer
+          format: uint8
 
 paths:
+  /AssignLight.json:
+    post:
+      summary: "Assign a light to a group"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                SerialNumber:
+                  type: integer
+                GroupNumber:
+                  type: integer
+                  format: uint8
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
   /ControllerName.json:
     post:
+      summary: "Retrieve controller details"
       responses:
         '200':
           description: "Controller details"
@@ -61,8 +119,114 @@ paths:
                   RSSI:
                     type: integer
 
+  /ExtinguishAll.json:
+    post:
+      summary: "Turn off all lights"
+      responses:
+        '200':
+          description: "Command status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /FlashLights.json:
+    post:
+      summary: "Flash all lights"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                OnOff:
+                  type: integer
+                  format: uint8
+      responses:
+        '200':
+          description: "Command status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /GroupListAdd.json:
+    post:
+      summary: "Add a group"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                GroupNumber:
+                  type: integer
+                  format: uint8
+                Name:
+                  type: string
+      responses:
+        '200':
+          description: "Command status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /GroupListClear.json:
+    post:
+      summary: "TBD"
+      responses:
+        '200':
+          description: "TBD"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+                  GroupList:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+
+  /GroupListDelete.json:
+    post:
+      summary: "Delete a group"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+      responses:
+        '200':
+          description: "Command result"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
   /GroupListGet.json:
     post:
+      summary: "Retrieve all groups"        
       responses:
         '200':
           description: "List of groups"
@@ -78,11 +242,49 @@ paths:
                     items:
                       $ref: '#/components/schemas/Group'
 
-  /ExtinguishAll.json:
+  /GroupListRename.json:
     post:
+      summary: "Rename a group"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                OldName:
+                  type: string
+                NewName:
+                  type: string
       responses:
         '200':
-          description: "Turn off all lights"
+          description: "Command result"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+  
+  /GroupListReorder.json:
+    post:
+      summary: "Reorder all groups"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                GroupNumbers:
+                  type: array
+                  items:
+                    type: integer
+                    format: uint8
+      responses:
+        '200':
+          description: "Command result"
           content:
             application/json:
               schema:
@@ -93,9 +295,282 @@ paths:
 
   /IlluminateAll.json:
     post:
+      summary: "Turn on all lights"
       responses:
         '200':
-          description: "Turn on all lights"
+          description: "Command result"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /IlluminateGroup.json:
+    post:
+      summary: "Turn on a group of lights"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                GroupNumber:
+                  type: integer
+                  format: uint8
+                Intensity:
+                  type: integer
+                  format: uint8
+      responses:
+        '200':
+          description: "Command result"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /IlluminateTheme.json:
+    post:
+      summary: "Activate a theme"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ThemeIndex:
+                  type: integer
+                  format: uint8
+                OnOff:
+                  description: "0 to turn off, or non-zero to set intensity"
+                  type: integer
+                  format: uint8
+      responses:
+        '200':
+          description: "Command result"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /ThemeClear.json:
+    post:
+      summary: "TBD"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ThemeIndex:
+                  type: integer
+                  format: uint8
+      responses:
+        '200':
+          description: "Command result"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /ThemeGet.json:
+    post:
+      summary: "Retrieve a theme"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ThemeIndex:
+                  type: integer
+                  format: uint8
+      responses:
+        '200':
+          description: "List of groups"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+                  Groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ThemeGroup'
+
+  /ThemeListAdd.json:
+    post:
+      summary: "Add a theme"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ThemeIndex:
+                  type: integer
+                  format: uint8
+                Name:
+                  type: string
+      responses:
+        '200':
+          description: "Command status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /ThemeListClear.json:
+    post:
+      summary: "TBD"
+      responses:
+        '200':
+          description: "Command status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /ThemeListDelete.json:
+    post:
+      summary: "Delete a theme"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+      responses:
+        '200':
+          description: "Command status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /ThemeListGet.json:
+    post:
+      summary: "Retrieve list of themes"
+      responses:
+        '200':
+          description: "List of themes"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+                  Restricted:
+                    description: "Restricted will be non-zero if themes are restricted in controller's setup menu. This implies some operations may not be performed through the API."
+                    type: integer
+                  ThemeList:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Theme'
+
+  /ThemeListRename.json:
+    post:
+      summary: "Rename a theme"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                OldName:
+                  type: string
+                NewName:
+                  type: string
+      responses:
+        '200':
+          description: "Command status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+  
+  /ThemeListReorder.json:
+    post:
+      summary: "Rename a theme"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ThemeIndexes:
+                  type: array
+                  items:
+                    type: integer
+                    format: uint8
+      responses:
+        '200':
+          description: "Command status"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Status:
+                    $ref: '#/components/schemas/Status'
+
+  /ThemeSet.json:
+    post:
+      summary: "Activate a theme"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ThemeIndex:
+                  type: array
+                  items:
+                    type: integer
+                    format: uint8
+                Groups:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/ThemeGroup'
+      responses:
+        '200':
+          description: "Command status"
           content:
             application/json:
               schema:

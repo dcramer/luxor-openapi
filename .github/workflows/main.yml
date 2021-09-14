@@ -13,15 +13,13 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   validate:
     runs-on: ubuntu-latest
     name: Swagger Editor Validator Remote
     steps:
       - uses: actions/checkout@v2
       - name: Validate OpenAPI definition
-        uses: char0n/swagger-editor-validate@v1
+        uses: char0n/swagger-editor-validate@v1.2.1
         with:
           definition-file: openapi.yaml

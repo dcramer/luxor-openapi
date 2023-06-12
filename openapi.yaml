@@ -713,7 +713,7 @@ paths:
       operationId: ThemeListReorder
       tags:
         - Themes
-      summary: "Rename a theme"
+      summary: "Reorder a theme"
       requestBody:
         required: true
         content:
